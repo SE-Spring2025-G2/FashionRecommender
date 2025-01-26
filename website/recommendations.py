@@ -1,5 +1,7 @@
 import functools
+import json
 import os
+import re
 from flask import (
     Blueprint,
     flash,
@@ -13,7 +15,6 @@ from flask import (
 )
 import google.generativeai as genai
 from . import contracts
-
 from werkzeug.security import check_password_hash, generate_password_hash
 from . import models
 from datetime import datetime
@@ -27,111 +28,109 @@ if not GEMINI_API_KEY:
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-UPLOAD_FOLDER = "uploads"
+UPLOAD_FOLDER = os.path.abspath("uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 recommendationsbp = Blueprint("recommendationsbp", __name__, url_prefix="/")
 
-"""
-payload = {
-    "occasion" : <occasion_name>
-    "culture" : <culture>
-    "gender": <gender>
-    "ageGroup": <ageGroup>
-    "city":<city>
-    "dateTimeInput":<dateTimeInput> format : YYYY-MM-DDTHH:MM:SS
-}
-"""
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def validate_session_user():
+    if contracts.SessionParameters.USERID not in session:
+        return None
+    try:
+        return int(session[contracts.SessionParameters.USERID])
+    except (KeyError, ValueError):
+        return None
+
+def parse_color_palette_response(text):
+    try:
+        # Extract JSON-like string using regex
+        json_str = re.search(r'\[\[\[.*?\]\]\]', text, re.DOTALL).group()
+        return json.loads(json_str)
+    except (AttributeError, json.JSONDecodeError) as e:
+        print(f"Error parsing color palette: {e}")
+        return []
 
 @recommendationsbp.route("/recommendations", methods=["POST"])
 def get_recommendations():
-    req_json_body = request.json
-    culture = ""
-    occasion = ""
-    gender = ""
-    ageGroup = ""
-    city = ""
-    userid = "1"
+    try:
+        userid = validate_session_user()
+        if not userid:
+            return jsonify({
+                "error": "User not logged in",
+                "error_code": contracts.ErrorCodes.USER_NOT_LOGGED_IN
+            }), 403
 
-    if contracts.SessionParameters.USERID not in session:
-        return (
-            jsonify(
-                {
-                    "error": "user not logged in",
-                    "error_code": contracts.ErrorCodes.USER_NOT_LOGGED_IN,
-                }
-            ),
-            403,
-        )
+        user = models.User.query.get(userid)
+        if not user:
+            return jsonify({
+                "error": "User not found",
+                "error_code": contracts.ErrorCodes.USER_NOT_FOUND
+            }), 404
 
-    userid = session[contracts.SessionParameters.USERID]
+        req_data = request.get_json()
+        if not req_data:
+            return jsonify({
+                "error": "Invalid request body",
+                "error_code": contracts.ErrorCodes.INVALID_REQUEST
+            }), 400
 
-    user = models.User.query.filter_by(id=int(userid)).first()
-    if contracts.RecommendationContractRequest.CULTURE_KEY in req_json_body:
-        culture = req_json_body[contracts.RecommendationContractRequest.CULTURE_KEY]
+        culture = req_data.get(contracts.RecommendationContractRequest.CULTURE_KEY, "")
+        occasion = req_data.get(contracts.RecommendationContractRequest.OCCASION_KEY, "")
+        gender = req_data.get(contracts.RecommendationContractRequest.GENDER_KEY, user.gender or "Female")
+        ageGroup = req_data.get(contracts.RecommendationContractRequest.AGE_GROUP_KEY, "")
+        city = req_data.get(contracts.RecommendationContractRequest.CITY_KEY, user.city or "")
 
-    # take from the user table
-    if contracts.RecommendationContractRequest.CITY_KEY in req_json_body:
-        city = req_json_body[contracts.RecommendationContractRequest.CITY_KEY]
-    else:
-        # take from the user table
-        city = user.city
+        from . import helper
+        help = helper.RecommendationHelper()
+        
+        try:
+            links = help.giveRecommendations(
+                userid=userid,
+                gender=gender,
+                occasion=occasion,
+                city=city,
+                culture=culture,
+                ageGroup=ageGroup,
+                date=datetime.today().strftime("%Y-%m-%d"),
+                time=datetime.now()
+            )
+        except Exception as e:
+            return jsonify({
+                "error": "Recommendation generation failed",
+                "error_code": contracts.ErrorCodes.RECOMMENDATION_FAILED
+            }), 500
 
-    dateInput = datetime.today().strftime("%Y-%m-%d")
-    timeInput = datetime.now()
+        try:
+            response = model.generate_content(
+                f"""Generate 3 color palettes with 5 colors each for:
+                Occasion: {occasion},
+                Culture: {culture},
+                Gender: {gender},
+                Age: {ageGroup},
+                City: {city}.
+                Format: [[[hexColor,item], ...], ...]"""
+            )
+            color_palettes = parse_color_palette_response(response.text)
+        except Exception as e:
+            color_palettes = []
+            print(f"Color palette generation failed: {e}")
 
-    if contracts.RecommendationContractRequest.GENDER_KEY in req_json_body:
-        gender = req_json_body[contracts.RecommendationContractRequest.GENDER_KEY]
-    else:
-        # take from the user table
-        gender = "Female"
+        return jsonify({
+            contracts.RecommendationContractResponse.LINKS: links,
+            "COLOR_PALETTES": color_palettes
+        }), 200
 
-    if contracts.RecommendationContractRequest.OCCASION_KEY in req_json_body:
-        occasion = req_json_body[contracts.RecommendationContractRequest.OCCASION_KEY]
-
-    # Age
-    if contracts.RecommendationContractRequest.AGE_GROUP_KEY in req_json_body:
-        ageGroup = req_json_body[contracts.RecommendationContractRequest.AGE_GROUP_KEY]
-
-    from . import helper
-
-    help = helper.RecommendationHelper()
-    links = help.giveRecommendations(
-        userid=userid,
-        gender=gender,
-        occasion=occasion,
-        city=city,
-        culture=culture,
-        ageGroup=ageGroup,
-        date=dateInput,
-        time=timeInput,
-    )
-
-    recommendations = dict()
-    recommendations[contracts.RecommendationContractResponse.LINKS] = []
-    for link in links:
-        recommendations[contracts.RecommendationContractResponse.LINKS].append(link)
-
-    response = model.generate_content(
-        f"""
-        You are a fashion recommender bot.
-        Give 3 color palette suggestions with 5 colors each based on the following data:
-        Occasion: {occasion},
-        Culture: {culture},
-        Gender: {gender},
-        Age group: {ageGroup},
-        City: {city}
-        With each color specific clothing/accessory/item of that color.
-        Return the output in following format where there are 5 colors in each palette and each palette is sorted by color prominence:
-        [[[hexColor1,item1], [hexColor2,item2], [hexColor3,item3], [hexColor4,item4], [hexColor5,item5]], [...], [...]]
-        The above response should be directly parsable by JSON.parse
-        """
-    )
-    recommendations["COLOR_PALETTES"] = response.text
-
-    return jsonify(recommendations), 200
-
+    except Exception as e:
+        print(f"Server error: {str(e)}")
+        return jsonify({
+            "error": "Internal server error",
+            "error_code": contracts.ErrorCodes.SERVER_ERROR
+        }), 500
 
 @recommendationsbp.route("/style_match", methods=["POST"])
 def style_match():
