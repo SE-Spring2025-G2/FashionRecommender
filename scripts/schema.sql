@@ -1,5 +1,3 @@
-drop database if exists fashion;
-create database fashion;
 use fashion;
 
 drop table if exists user;
@@ -75,3 +73,4 @@ create table recommendation (
 use fashion;
 select * from favourite;
 truncate table favourite;
+GRANT ALL PRIVILEGES ON fashion.* TO 'fashion'@'%';

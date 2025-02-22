@@ -2,6 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
+import os
+
 db = SQLAlchemy()
 DB_NAME = "database.db"
 db_overlay = None
@@ -11,10 +13,15 @@ def create_app(test_conifg=None):
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "hjshjhdjah kjshkjdhjs"
     # app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
-
+    sql_username = os.environ.get('DB_USER')
+    sql_password = os.environ.get('DB_PASSWORD')
+    sql_host = os.environ.get('DB_HOST')
+    sql_db = os.environ.get('DB_NAME')
+    print(f"sql_username: {sql_username}")
+    print(f"sql_password: {sql_password}")
     app.config[
         "SQLALCHEMY_DATABASE_URI"
-    ] = 'mysql+pymysql://root:root@localhost/fashion'
+    ] = f'mysql+pymysql://{sql_username}:{sql_password}@{sql_host}:3306/fashion'
 
     if test_conifg:
         app.config["SECRET_KEY"] = test_conifg["SECRET_KEY"]
