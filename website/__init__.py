@@ -17,8 +17,6 @@ def create_app(test_conifg=None):
     sql_password = os.environ.get('DB_PASSWORD')
     sql_host = os.environ.get('DB_HOST')
     sql_db = os.environ.get('DB_NAME')
-    print(f"sql_username: {sql_username}")
-    print(f"sql_password: {sql_password}")
     app.config[
         "SQLALCHEMY_DATABASE_URI"
     ] = f'mysql+pymysql://{sql_username}:{sql_password}@{sql_host}:3306/fashion'

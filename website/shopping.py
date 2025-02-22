@@ -1,4 +1,5 @@
 import requests
+import os
 from flask_login import current_user
 from flask import (
     Blueprint,
@@ -10,7 +11,7 @@ from flask import (
 # Shopping Class
 class Shopping:
     def __init__(self):
-        self.API_KEY = "de711d79731e559c2229268ef91800bdce6db2a1fd6961e05284070cd673775a"
+        self.API_KEY = os.environ.get("LYKDAT_API_KEY")
         self.url = "https://cloudapi.lykdat.com/v1/global/search"
 
     def shopping_results(self, image_url):
