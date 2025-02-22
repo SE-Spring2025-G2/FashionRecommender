@@ -13,6 +13,7 @@ from flask import (
     session,
     url_for,
 )
+from flask_login import login_required, current_user
 import google.generativeai as genai
 from . import contracts
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -38,14 +39,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def validate_session_user():
-    if contracts.SessionParameters.USERID not in session:
-        return None
-    try:
-        return int(session[contracts.SessionParameters.USERID])
-    except (KeyError, ValueError):
-        return None
-
 def parse_color_palette_response(text):
     try:
         # Extract JSON-like string using regex
@@ -56,9 +49,10 @@ def parse_color_palette_response(text):
         return []
 
 @recommendationsbp.route("/recommendations", methods=["POST"])
+@login_required
 def get_recommendations():
     try:
-        userid = validate_session_user()
+        userid = current_user.id
         if not userid:
             return jsonify({
                 "error": "User not logged in",

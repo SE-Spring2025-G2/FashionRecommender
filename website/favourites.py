@@ -6,7 +6,7 @@ from flask import (
     session
 )
 
-from flask_login import current_user
+from flask_login import current_user, login_required
 from . import db
 from . import contracts
 from .models import Favourite
@@ -25,7 +25,9 @@ payload = {
 
 
 @favouritesbp.route("/favourites", methods=["POST", "GET"])
+@login_required
 def favourites(userid=None):
+    print("GET request {}".format(userid), flush=True)
     if request.method == "GET":
         return handle_get_request(userid)
     elif request.method == "POST":
@@ -33,7 +35,7 @@ def favourites(userid=None):
 
 
 def handle_get_request(userid):
-    userid = userid or session.get(contracts.SessionParameters.USERID)
+    userid = current_user.id
     if not userid:
         return jsonify({"error": "User ID not found"}), 403
 
@@ -44,15 +46,14 @@ def handle_get_request(userid):
     print("hitting api")
     return render_template("favourites.html", user=current_user, sorted_fav_list=sorted_fav_list, enumerate=enumerate)
 
-
+@login_required
 def handle_post_request():
     req_json_body = request.json
 
-    if contracts.SessionParameters.USERID not in session:
-        return jsonify({"error": "user not logged in",
-                        "error_code": contracts.ErrorCodes.USER_NOT_LOGGED_IN}), 403
+    userid = current_user.id
+    if not userid:
+        return jsonify({"error": "User ID not found"}), 403
 
-    userid = session[contracts.SessionParameters.USERID]
     favourite_url = req_json_body.get(contracts.FavouritesContrastRequest.FAVOURITE_URL_KEY, "")
     search_occasion = req_json_body.get(contracts.FavouritesContrastRequest.SEARCH_OCCASION_KEY, "")
     search_weather = req_json_body.get(contracts.FavouritesContrastRequest.SEARCH_WEATHER_KEY, "")
