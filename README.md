@@ -95,13 +95,12 @@ $ cd Fashion-Recommender
 We have made a python script to run the application.
 Just run 
 
-$ python3 main.py
-
+$ `docker compose up -d`
 
 ### 3. Follow the provided address and enjoy!
 
 
-http://localhost:5000/
+http://localhost:8000/
 
 
 ## Contributors:
