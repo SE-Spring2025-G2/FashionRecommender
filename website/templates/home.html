@@ -13,68 +13,95 @@
 
         </div>
     </div>
-    <form action="/recommendations" method="POST" id="recoForm">
-        <div class="top-buffer">
-            <div style="display: flex; justify-content: center;">
-                <div class="col-2">
-                    <label>Culture: </label><input type="text" class="form-control hover-zoom" id="culture"
-                        name="culture" />
+    <div class="container py-5">
+        <form action="/recommendations" method="POST" id="recoForm" class="bg-white shadow-sm rounded-3 p-4">
+            <h3 class="text-center mb-4">Get Your Fashion Recommendations</h3>
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="culture" name="culture" placeholder="Culture">
+                        <label for="culture">Culture</label>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <label>City: </label><input type="text" class="form-control hover-zoom" id="city"
-                        name="city" />
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="city" name="city" placeholder="City">
+                        <label for="city">City</label>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <label for="gender">Gender</label>
-                    <select class="custom-select" id="inputGroupSelect01" id="gender" name="gender"
-                        value={{current_user.gender}}>
-                        <option value={{current_user.gender}} selected>Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">other</option>
-                    </select>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select" id="gender" name="gender">
+                            <option value="" selected disabled>Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <label for="gender">Gender</label>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <label for="ageGroup">Age Group</label>
-                    <select class="custom-select" id="inputGroupSelect02" id="ageGroup" name="ageGroup">
-                        <option value="Kids">Kids</option>
-                        <option value="Teenagers">Teenagers</option>
-                        <option value="Adults">Adults</option>
-                    </select>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select" id="ageGroup" name="ageGroup">
+                            <option value="Kids">Kids</option>
+                            <option value="Teenagers">Teenagers</option>
+                            <option value="Adults">Adults</option>
+                        </select>
+                        <label for="ageGroup">Age Group</label>
+                    </div>
                 </div>
-                <div class="form-group col-2">
-                    <label for="occasion">Occasion</label>
-                    <input class="form-control hover-zoom" size="50" type="text" id="occasion" name="occasion"
-                        placeholder="Occasion?">
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="occasion" name="occasion" placeholder="Occasion">
+                        <label for="occasion">Occasion</label>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <label>Date and Time: </label><input type="datetime-local" class="form-control hover-zoom"
-                        id="dateTime" name="dateTime" />
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="datetime-local" class="form-control" id="dateTime" name="dateTime">
+                        <label for="dateTime">Date and Time</label>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6 class="card-title mb-3">Upload Your Style Inspiration</h6>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="clothing-image" name="clothingImage" accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" id="go" name="go" class="btn btn-primary btn-lg px-5 rounded-pill">
+                        Get Suggestions
+                    </button>
                 </div>
             </div>
-            <div style="display: flex; justify-content: center; margin-top: 10px;">
-                <button id="go" name="go" type="button" class="btn recoButton1 btn-primary btn-rounded">GO</button>
+        </form>
+    </div>
+    <div class="row top-buffer">
+        <div class="col-12">
+            <div align="center" id="center" style="display:none">
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
             </div>
         </div>
-        <div class="row top-buffer">
-            <div class="col-12">
-                <div align="center" id="center" style="display:none">
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                </div>
-            </div>
-        </div>
+    </div>
 
-    </form>
-
-    <section id="upload-section"
+    <!-- <section id="upload-section"
         style="margin: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
         <h2 style="text-align: center; font-family: Arial, sans-serif; color: #333;">Upload Your Clothing Image</h2>
         <p style="text-align: center; font-family: Arial, sans-serif; color: #555;">
@@ -100,6 +127,6 @@
             <div id="style-tips"></div>
             <div id="accessories-suggestions"></div>
         </section>
-    </section>
+    </section> -->
 </div>
 {% endblock %}

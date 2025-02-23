@@ -1,7 +1,50 @@
 var formattedFormData2={};
 var occasionValLS;
 var cityValLS;
-$(document).ready(function(){
+
+
+const windowReady = (callBack) => {
+    if (document.readyState === 'complete') {
+      callBack();
+    }
+    else {
+      window.addEventListener('load', callBack);
+    }
+};
+
+function setupPalletes(){
+	let palettes = sessionStorage.getItem('colorPalettes');
+	try {
+		palettes = JSON.parse(palettes);
+	} catch (error) {
+		console.error('Error parsing color palettes:', error);
+	}
+
+	const container = document.createElement('div');
+	container.className = 'paletteContainer';
+
+	if (Array.isArray(palettes)) {
+		palettes.forEach(color => {
+			const colorBlock = document.createElement('div');
+			colorBlock.style.backgroundColor = color;
+			colorBlock.className = 'paletteBlock';
+			colorBlock.textContent = color;
+
+			container.appendChild(colorBlock);
+		});
+
+		document.querySelector( '.palettes' ).appendChild(container);
+	} else {
+		console.warn('No valid color palettes found.');
+	}
+}
+
+windowReady(function () {
+	setupPalletes();
+	loadInteractivity();
+});
+
+function loadInteractivity(){
 	$('#Myimg').click(function(){
   		$('#Mymodal').modal('show')
 	});
@@ -68,4 +111,4 @@ $(document).ready(function(){
 	});
 	
 	
-});
+};

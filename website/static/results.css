@@ -175,6 +175,27 @@ body.modal-open .media-element {
   animation-delay: calc(100ms * var(--i));
 }
 
+.paletteContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.paletteBlock {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
 @keyframes fillBg {
   0% {
     width: 0%;
