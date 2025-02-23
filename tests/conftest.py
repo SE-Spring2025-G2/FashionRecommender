@@ -4,6 +4,10 @@ import pytest
 from flask import Flask, g
 from flask_sqlalchemy import SQLAlchemy
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 sys.path.append("..")
 
