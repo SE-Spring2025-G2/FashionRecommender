@@ -1,0 +1,34 @@
+
+<link rel="stylesheet" href="{{ url_for('static', filename='logos.css') }}">
+<script src="{{ url_for('static', filename='js/logos.js') }}"></script>
+{% extends "base.html" %}
+
+{% block title %}Trendy Sites!{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3 class="title">Trendy Sites!</h3>
+    <p class="catchy-text">Discover the most popular fashion sites and stay trendy!</p>
+    <div class="row" id="logo-grid">
+        {% for website in website_name[:9] %}
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card">
+                <div class="logo-container">
+                    <a href="https://{{ website }}" target="_blank">
+                        <img src="{{ url_for('static', filename='images/' ~ website ~ '.png') }}" alt="{{ website }}">
+                        <div class="overlay">{{ website }}</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="navigation-buttons">
+        <button class="nav-button" id="prev-button">Previous</button>
+        <button class="nav-button" id="next-button">Next</button>
+    </div>
+</div>
+<script>
+    const websiteName = {{ website_name|tojson|safe }};
+</script>
+{% endblock %}
