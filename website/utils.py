@@ -58,8 +58,8 @@ class WeatherAPI:
 
 class ImageConfig:
     def __init__(self) -> None:
-        self.API_KEY = "AIzaSyAlGizJS88AOCq6EjO73_FslUHBBIIxvmE"
-        self.PROJ_CX = "36d7431dc29f44ef1"
+        self.API_KEY = os.environ.get("GOOGLE_IMAGES_API_KEY")
+        self.PROJ_CX = os.environ.get("GOOGLE_IMAGES_PROJ_CX")
 
 
 class QueryBuilder:
