@@ -26,4 +26,3 @@ class RecommendationHelper:
     
     def giveRecommendationsBasedOnGemini(self, query):
         return self.searchAPIObj.image_search(query)
-

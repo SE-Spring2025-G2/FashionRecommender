@@ -118,7 +118,7 @@ def get_recommendations():
                 config={
                     'response_mime_type': 'application/json',
                     'response_schema': GeminiQueryResponse
-                    }
+                }
             )
             response: GeminiQueryResponse = result.parsed
 
@@ -155,7 +155,7 @@ def get_recommendations():
                 config={
                     'response_mime_type': 'application/json',
                     'response_schema': GeminiQueryResponse
-                    }
+                }
             )
             response: GeminiQueryResponse = result.parsed
 
