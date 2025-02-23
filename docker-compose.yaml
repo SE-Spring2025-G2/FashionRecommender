@@ -28,5 +28,7 @@ services:
       DB_PASSWORD: strongandsecurepassword
       DB_NAME: fashion
       LYKDAT_API_KEY: ${LYKDAT_API_KEY}
+      WEATHER_KEY: ${WEATHER_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
     volumes:
       - .:/app
