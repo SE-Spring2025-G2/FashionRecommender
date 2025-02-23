@@ -1,6 +1,7 @@
 from . import db
 from flask_login import UserMixin
 from .CustomMixin import SerializerMixin
+from sqlalchemy.sql import func
 
 
 class User(db.Model, UserMixin):
@@ -26,3 +27,12 @@ class Favourite(db.Model, UserMixin, SerializerMixin):
     favourite_url = db.Column(db.String(255))
     search_occasion = db.Column(db.String(255))
     search_weather = db.Column(db.String(255))
+
+class Feedback(db.Model, UserMixin, SerializerMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    ftype = db.Column(db.String(100), nullable=False)
+    comments = db.Column(db.Text, nullable=False)
+    frate = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(150), nullable=False)
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    userid = db.Column(db.Integer, db.ForeignKey('user.id'))
