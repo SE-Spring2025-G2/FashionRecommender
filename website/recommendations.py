@@ -87,6 +87,8 @@ def get_recommendations():
         city = req_data.get(contracts.RecommendationContractRequest.CITY_KEY, user.city or "")
 
         weather = utils.WeatherAPI().getCurrentWeather(city=city)
+
+        print(weather, flush = True)
         
         help = helper.RecommendationHelper()
 
@@ -124,8 +126,8 @@ def get_recommendations():
 
             os.remove(temp_file_path)
 
-            print(response.query)
-            print(response.color_palette)
+            # print(response.query)
+            # print(response.color_palette)
 
             links = help.giveRecommendationsBasedOnGemini(response.query)
 
@@ -159,8 +161,8 @@ def get_recommendations():
             )
             response: GeminiQueryResponse = result.parsed
 
-            print(response.query)
-            print(response.color_palette)
+            # print(response.query)
+            # print(response.color_palette)
 
             links = help.giveRecommendationsBasedOnGemini(response.query)
             return jsonify({
@@ -169,10 +171,10 @@ def get_recommendations():
             }), 200
 
     except Exception as e:
-        print(f"Server error: {str(e)}")
+        print(f"Server error: {str(e)}", flush=True)
         return jsonify({
             "error": "Internal server error",
-            "error_code": contracts.ErrorCodes.SERVER_ERROR
+            # "error_code": contracts.ErrorCodes.SERVER_ERROR
         }), 500
 
 @recommendationsbp.route("/style_match", methods=["POST"])
