@@ -10,11 +10,10 @@ jobs:
     - name: Install Python 3.9
       uses: actions/setup-python@v1
       with:
-        python-version: 3.9
+        python-version: 3.14
     - name: Install dependencies
       run: |
         pip install pytest-cov
-        echo requirements installed
     - name: Run the tests
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

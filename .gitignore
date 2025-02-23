@@ -138,5 +138,4 @@ libbz2-dev
 libncursesw5-dev
 
 # Secrets
-projectsecrets/
-/creds.json
+creds.json
