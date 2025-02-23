@@ -24,7 +24,7 @@ CLIENT_SECRETS_FILE = os.path.join(
 
 flow = None
 
-if not os.path.exists(CLIENT_SECRETS_FILE):
+if os.path.exists(CLIENT_SECRETS_FILE):
     flow = Flow.from_client_secrets_file(
         client_secrets_file=CLIENT_SECRETS_FILE,
         scopes=[
