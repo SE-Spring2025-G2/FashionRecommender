@@ -38,6 +38,7 @@ def create_app():
     import website.recommendations
 
     import website.logos
+    import website.feedback
 
     # from . import recommendations
 
@@ -46,6 +47,7 @@ def create_app():
     app.register_blueprint(website.preferences.preferencesbp)
     app.register_blueprint(website.recommendations.recommendationsbp)
     app.register_blueprint(website.logos.logosbp)
+    app.register_blueprint(website.feedback.feedbackbp)
     return app
 
 
