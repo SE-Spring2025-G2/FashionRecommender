@@ -1,6 +1,6 @@
 import requests
 import os
-from flask_login import current_user
+from flask_login import current_user, login_required
 from flask import (
     Blueprint,
     render_template,
@@ -36,7 +36,7 @@ shoppingbp = Blueprint("shoppingbp", __name__, url_prefix="/")
 
 
 @shoppingbp.route("/shopping-results", methods=["GET"])
-# @login_required
+@login_required
 def get_shopping_results():
     imageUrl = str(request.args.to_dict())[2:-6]
     s = Shopping()

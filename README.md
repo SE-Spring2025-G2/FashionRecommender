@@ -62,12 +62,14 @@ We have 'A style for every story' so let it be known to the world :)
 Install the requirements using <br>
 pip install -r requirements.txt <br><br>
 
-Add a Gemini Key and a weather API key and a LYKDAT store API key into a `.env` file at the base of the repo:
+Add a Gemini Key, Google images API key, a weather API key and a LYKDAT store API key into a `.env` file at the base of the repo:
 
 ```
 LYKDAT_API_KEY=''
 WEATHER_KEY=''
 GEMINI_API_KEY=''
+GOOGLE_IMAGES_API_KEY=''
+GOOGLE_IMAGES_PROJ_CX=''
 ```
 
 

@@ -12,6 +12,7 @@ def test_style_match_status(app):
     with open('tests/sample_data/sample_shirt.jpg', "rb") as img_file:
         data={'clothingImage': (img_file, "test_image.jpg")}
         response = client.post("/style_match", data=data, headers=headers)
+    print(response.json)
     assert response.status_code == 200
 
     

@@ -58,8 +58,8 @@ class WeatherAPI:
 
 class ImageConfig:
     def __init__(self) -> None:
-        self.API_KEY = "AIzaSyAlGizJS88AOCq6EjO73_FslUHBBIIxvmE"
-        self.PROJ_CX = "36d7431dc29f44ef1"
+        self.API_KEY = os.environ.get("GOOGLE_IMAGES_API_KEY")
+        self.PROJ_CX = os.environ.get("GOOGLE_IMAGES_PROJ_CX")
 
 
 class QueryBuilder:
@@ -82,11 +82,14 @@ class SearchImages:
         self.query_builder = QueryBuilder()
 
     # gives the list of urls for a search
-    def image_search(self, query_keywords, culture, num_of_records=None):
+    def image_search(self, query_keywords, culture=None, num_of_records=None):
         if not num_of_records:
             num_of_records = self.default_num_of_records
-
-        query = self.query_builder.getQueryString(query_keywords, culture=culture)
+        
+        if not culture:
+            query = query_keywords
+        else:
+            query = self.query_builder.getQueryString(query_keywords, culture=culture)
         print("Searchingy ", query)
         _search_params = {"q": query, "num": num_of_records}
         self.gis.search(search_params=_search_params)

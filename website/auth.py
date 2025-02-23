@@ -12,8 +12,6 @@ from . import contracts
 import hashlib
 import json
 
-GOOGLE_CLIENT_ID = "1086877699482-kv5dvqo6n178o3806o7la513oeqchtmv.apps.googleusercontent.com"
-
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 # Initialize blueprint for authentication routes
@@ -24,20 +22,27 @@ CLIENT_SECRETS_FILE = os.path.join(
     pathlib.Path(__file__).parent.resolve(), "creds.json"
 )
 
-flow = Flow.from_client_secrets_file(
-    client_secrets_file=CLIENT_SECRETS_FILE,
-    scopes=[
-        "https://www.googleapis.com/auth/userinfo.profile",
-        "https://www.googleapis.com/auth/userinfo.email",
-        "openid",
-    ],
-    redirect_uri="http://127.0.0.1:8000/google-callback",
-)
+flow = None
+
+if os.path.exists(CLIENT_SECRETS_FILE):
+    flow = Flow.from_client_secrets_file(
+        client_secrets_file=CLIENT_SECRETS_FILE,
+        scopes=[
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email",
+            "openid",
+        ],
+        redirect_uri="http://localhost:8000/google-callback",
+    )
+else:
+    flow = None
 
 
 # Google OAuth login route
 @auth.route("/google-login")
 def google_login():
+    if not flow:
+        return "Error: Missing client secrets file", 400
     authorization_url, state = flow.authorization_url()
     session["state"] = state
     return redirect(authorization_url)
@@ -55,7 +60,7 @@ def google_callback():
     token_request = google_requests.Request()
 
     id_info = id_token.verify_oauth2_token(
-        id_token=credentials._id_token, request=token_request, audience=GOOGLE_CLIENT_ID
+        id_token=credentials._id_token, request=token_request, audience=flow.credentials.client_id
     )
 
     user = User.query.filter_by(email=id_info.get("email")).first()
