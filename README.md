@@ -62,20 +62,13 @@ We have 'A style for every story' so let it be known to the world :)
 Install the requirements using <br>
 pip install -r requirements.txt <br><br>
 
-In the project root folder,  <br>
-Create a module: projectsecrets  <br>
-ie. a folder named projectsecretes with a \_\_init\_\_.py inside it <br>
+Add a Gemini Key and a weather API key and a LYKDAT store API key into a `.env` file at the base of the repo:
 
-In this module, create files for secret variables <br>
-1. For Gemini API <br>
-   gemini_secret.py <br>
-   GEMINI_API_KEY="YOUR_API_KEY" <br>
-2. For Weather API <br>
-   weather_secret.py <br>
-   WEATHER_KEY="YOUR_API_KEY" <br>
-3. For Google Sign In API <br>
-   google_secret.py <br>
-   GOOGLE_CLIENT_ID="YOUR_CLIENT_ID" <br>
+```
+LYKDAT_API_KEY=''
+WEATHER_KEY=''
+GEMINI_API_KEY=''
+```
 
 
 ## 2. Deploying
