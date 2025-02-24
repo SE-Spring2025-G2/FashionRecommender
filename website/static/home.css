@@ -191,9 +191,6 @@ body {
     color: #111;
 }
 
-
-
-
 .text span {
   font-size: 60px;
   display: inline-block;
@@ -215,9 +212,6 @@ body {
   background-color: rgb(255, 208, 0);
   z-index: -1;
   box-shadow: 0 5px 5px #111;
-}
-
-.text:hover span::before {
   animation: fillBg 1s ease forwards;
   animation-delay: calc(100ms * var(--i));
 }
