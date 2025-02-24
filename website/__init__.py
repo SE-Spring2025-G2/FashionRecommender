@@ -35,6 +35,7 @@ def create_app(test_conifg=None):
     from . import shopping
     from . import logos
     from . import feedback
+    from . import blogs
 
     app.register_blueprint(views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
@@ -44,6 +45,7 @@ def create_app(test_conifg=None):
     app.register_blueprint(shopping.shoppingbp)
     app.register_blueprint(logos.logosbp)
     app.register_blueprint(feedback.feedbackbp)
+    app.register_blueprint(blogs.blogsbp)
 
     from .models import User
 
