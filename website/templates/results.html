@@ -42,14 +42,21 @@
         }
     </style>
     <script>
-
         // Show the query
         let query = JSON.parse(window.sessionStorage.getItem('query'));
-        if (query['culture'] !== '') document.writeln(`<div class="queryDiv">${query['culture']}</div>`);
-        if (query['gender'] !== '') document.writeln(`<div class="queryDiv">${query['gender']}</div>`);
-        if (query['ageGroup'] !== '') document.writeln(`<div class="queryDiv">${query['ageGroup']}</div>`);
-        if (query['occasion'] !== '') document.writeln(`<div class="queryDiv">${query['occasion']}</div>`);
-        if (query['dateTime'] !== '') document.writeln(`<div class="queryDiv">${query['dateTime']}</div>`);
+        const queryKeys = ["culture", "occasion", "gender", "ageGroup", "seasonalTrends",
+        "personalStyle", "bodyType", "fitType", "fabricPreference",
+        "colorPreference", "clothingType", "activityType", "lowerBudget"];
+        queryKeys.forEach(key => {
+            if (query[key]) {
+                if (key === "lowerBudget") {
+                    let upperBudget = query["upperBudget"] ? query["upperBudget"] : "N/A";
+                    document.write(`<div class="queryDiv">Budget Range: $${query[key]} - $${upperBudget}</div>`);
+                    return;
+                }
+                document.write(`<div class="queryDiv">${query[key]}</div>`);
+            }
+        });
     </script>
 </div>
 

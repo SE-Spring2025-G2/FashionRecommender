@@ -7,35 +7,7 @@ const windowReady = (callBack) => {
     }
 };
 
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            async position => {
-                try {
-                    // Use reverse geocoding to get city name
-                    const response = await fetch(
-                        `https://nominatim.openstreetmap.org/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json`
-                    );
-                    const data = await response.json();
-                    const city = data.address.city || data.address.town || data.address.village;
-                    document.getElementById('city').value = city;
-                } catch (error) {
-                    alert('Error getting location: ' + error.message);
-                }
-            },
-            error => {
-                alert('Error getting location: ' + error.message);
-            }
-        );
-    } else {
-        alert('Geolocation is not supported by this browser.');
-    }
-}
-
 windowReady(function () {
-    const locationButton = document.getElementById('location');
-    locationButton.addEventListener('click', getLocation);
-
     const goButton = document.getElementById('go');
     document.getElementById('recoForm').addEventListener('submit', function (e) {
         e.preventDefault();
@@ -69,3 +41,56 @@ windowReady(function () {
         loader.style.display = '';
     });
 });
+
+function updateBudgetValues(slider, type) {
+    const lowerSlider =
+      document.getElementById("lowerRangeSlider");
+    const upperSlider =
+      document.getElementById("upperRangeSlider");
+    const lowerInput = document.getElementById("lowerBudget");
+    const upperInput = document.getElementById("upperBudget");
+
+    if (type === "lower") {
+      // Ensure lower value doesn't exceed upper value
+      const value = Math.min(
+        parseInt(slider.value),
+        parseInt(upperSlider.value)
+      );
+      lowerSlider.value = value;
+      lowerInput.value = value;
+    } else {
+      // Ensure upper value doesn't go below lower value
+      const value = Math.max(
+        parseInt(slider.value),
+        parseInt(lowerSlider.value)
+      );
+      upperSlider.value = value;
+      upperInput.value = value;
+    }
+  }
+
+  function updateSliderFromInput(input, type) {
+    const lowerSlider =
+      document.getElementById("lowerRangeSlider");
+    const upperSlider =
+      document.getElementById("upperRangeSlider");
+    const lowerInput = document.getElementById("lowerBudget");
+    const upperInput = document.getElementById("upperBudget");
+
+    let value = parseInt(input.value) || 0;
+
+    // Clamp value between min and max
+    value = Math.max(0, Math.min(200, value));
+
+    if (type === "lower") {
+      // Ensure lower value doesn't exceed upper value
+      value = Math.min(value, parseInt(upperInput.value));
+      lowerSlider.value = value;
+      lowerInput.value = value;
+    } else {
+      // Ensure upper value doesn't go below lower value
+      value = Math.max(value, parseInt(lowerInput.value));
+      upperSlider.value = value;
+      upperInput.value = value;
+    }
+  }

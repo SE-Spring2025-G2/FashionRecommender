@@ -139,3 +139,6 @@ libncursesw5-dev
 
 # Secrets
 creds.json
+
+# Playgrounds
+playground/
