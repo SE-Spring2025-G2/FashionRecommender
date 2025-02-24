@@ -16,6 +16,9 @@ services:
   python-app:
     build: .
     container_name: python-frontend
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     ports:
       - "8000:8000"
     depends_on:

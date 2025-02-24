@@ -42,81 +42,55 @@ windowReady(function () {
     });
 });
 
+function updateBudgetValues(slider, type) {
+    const lowerSlider =
+      document.getElementById("lowerRangeSlider");
+    const upperSlider =
+      document.getElementById("upperRangeSlider");
+    const lowerInput = document.getElementById("lowerBudget");
+    const upperInput = document.getElementById("upperBudget");
 
+    if (type === "lower") {
+      // Ensure lower value doesn't exceed upper value
+      const value = Math.min(
+        parseInt(slider.value),
+        parseInt(upperSlider.value)
+      );
+      lowerSlider.value = value;
+      lowerInput.value = value;
+    } else {
+      // Ensure upper value doesn't go below lower value
+      const value = Math.max(
+        parseInt(slider.value),
+        parseInt(lowerSlider.value)
+      );
+      upperSlider.value = value;
+      upperInput.value = value;
+    }
+  }
 
+  function updateSliderFromInput(input, type) {
+    const lowerSlider =
+      document.getElementById("lowerRangeSlider");
+    const upperSlider =
+      document.getElementById("upperRangeSlider");
+    const lowerInput = document.getElementById("lowerBudget");
+    const upperInput = document.getElementById("upperBudget");
 
+    let value = parseInt(input.value) || 0;
 
-// $(document).ready(function () {
-//     $("#upload-button").click(function (e) {
-//         e.preventDefault(); // Prevent form submission
-//         var fileInput = document.getElementById("clothing-image");
+    // Clamp value between min and max
+    value = Math.max(0, Math.min(200, value));
 
-//         // Ensure a file is selected
-//         if (!fileInput.files[0]) {
-//             alert("Please select an image before uploading.");
-//             return;
-//         }
-
-//         var formData = new FormData();
-//         formData.append("clothingImage", fileInput.files[0]);
-
-//         // Perform AJAX request to /style_match
-//         $.ajax({
-//             type: "POST",
-//             url: "/style_match",
-//             data: formData,
-//             processData: false,
-//             contentType: false,
-//             success: function (response) {
-            
-//                 try {
-//                     var recommendationsStr = response.recommendations.replace(/```json|\n```/g, '');
-//                     var recommendations = JSON.parse(recommendationsStr);
-            
-//                     if (Array.isArray(recommendations.recommended_outfits)) {
-//                         var outfitsHtml = "<hr><h4>Recommended Outfits</h4><ul>";
-//                         recommendations.recommended_outfits.forEach(function (outfit) {
-//                             outfitsHtml += `<li><strong>${outfit.name}:</strong> ${outfit.description}</li>`;
-//                         });
-//                         outfitsHtml += "</ul>";
-//                         $("#outfit-suggestions").html(outfitsHtml);
-//                     } else {
-//                         $("#outfit-suggestions").html("<p>No recommended outfits found.</p>");
-//                     }
-            
-//                     if (Array.isArray(recommendations.style_tips)) {
-//                         $("#style-tips").html(`<h3>Style Tips: </h3><ul>${recommendations.style_tips.map(tip => `<li>${tip}</li>`).join('')}</ul>`);
-//                     } else {
-//                         $("#style-tips").html("<p>No style tips available.</p>");
-//                     }
-
-//                     if (Array.isArray(recommendations.accessories)) {
-
-//                         var accessoriesHtml = "<hr><h4>Accesories:</h4><ul>";
-//                         recommendations.accessories.forEach(function (accessory) {
-//                             accessoriesHtml += `<li><strong>${accessory.type}:</strong> ${accessory.color_scheme}</li>`;
-//                         });
-//                         accessoriesHtml += "</ul>";
-//                         $("#accessories-suggestions").html(accessoriesHtml);
-//                     } else {
-//                         $("#accessories-suggestions").html("<p>No accessories found.</p>");
-//                     }
-            
-//                     $("#recommendations-section").show();
-
-//                     document.getElementById("recommendations-section").scrollIntoView({
-//                         behavior: "smooth",
-//                         block: "start"
-//                     });
-//                 } catch (error) {
-//                     console.error("Error parsing recommendations:", error);
-//                     alert("There was an error processing the recommendation data.");
-//                 }
-//             },
-//             error: function (error) {
-//                 console.error("Error:", error);
-//                 alert("An error occurred while uploading the image.");
-//             },
-//         });
-//     });
-// });
+    if (type === "lower") {
+      // Ensure lower value doesn't exceed upper value
+      value = Math.min(value, parseInt(upperInput.value));
+      lowerSlider.value = value;
+      lowerInput.value = value;
+    } else {
+      // Ensure upper value doesn't go below lower value
+      value = Math.max(value, parseInt(lowerInput.value));
+      upperSlider.value = value;
+      upperInput.value = value;
+    }
+  }
