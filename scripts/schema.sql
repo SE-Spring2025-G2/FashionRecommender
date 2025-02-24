@@ -1,9 +1,12 @@
+drop database if exists fashion;
+create database fashion;
 use fashion;
 
 drop table if exists user;
 drop table if exists user_details;
 drop table if exists preference;
 drop table if exists recommendation;
+DROP TABLE IF EXISTS feedback;
 
 create table user(
     id int not null primary key AUTO_INCREMENT,
@@ -36,7 +39,17 @@ create table favourite (
     search_weather varchar(255) not null,
     foreign key (userid) references user(id));
 
-
+-- Create the feedback table
+create table feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userid INT NOT NULL,
+    ftype VARCHAR(100) NOT NULL,
+    comments TEXT NOT NULL,
+    frate VARCHAR(100) NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    FOREIGN KEY (userid) REFERENCES user(id)
+);
 
 drop database if exists fashion_test;
 create database fashion_test;

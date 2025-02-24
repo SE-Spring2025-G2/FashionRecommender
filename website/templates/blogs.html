@@ -1,0 +1,58 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='blogs.css') }}">
+<script src="{{ url_for('static', filename='js/blogs.js') }}"></script>
+{% extends "base.html" %}
+
+{% block title %}Blogs!{% endblock %}
+
+{% block content %}
+
+
+<div class="resultbg">
+    <div class="page-headerx">
+        <div class="container">
+            <div class="text">
+                <span style="--i:-4">V</span>
+                <span style="--i:-3">o</span>
+                <span style="--i:-4">g</span>
+                <span style="--i:-1">u</span>
+                <span style="--i:0">e</span>
+                <span style="--i:1">X</span>
+            </div>
+        </div>
+        <div class="container flow">
+
+            <div class="page-title">Tailor made, just for you.</div>
+            <p class="page-subtitle"></p>
+        </div>
+    </div>
+
+</div >
+
+<div class="container">
+    <h3 class="title">Top Fashion Blogs</h3>
+    <p class="catchy-text">Explore the leading voices in fashion and style!</p>
+    <div class="row" id="logo-grid">
+        {% for blog in blogs[:6] %}
+        <div class="col-md-4 col-sm-6 mb-4"> <!-- 3 cards per row on medium screens -->
+            <div class="card">
+                <img src="{{ blog.Image }}" class="card-img-top" alt="{{ blog.Name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ blog.Name }}</h5>
+                    <p class="card-text">{{ blog.Text }}</p>
+                    <a href="{{ blog.URL }}" target="_blank" class="btn btn-primary">Visit Website</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="navigation-buttons">
+        <button class="nav-button" id="prev-button">Previous</button>
+        <button class="nav-button" id="next-button">Next</button>
+    </div>
+</div>
+<script>
+    const blogsname = {{ blogs|tojson|safe }};
+</script>
+
+{% endblock %}
+

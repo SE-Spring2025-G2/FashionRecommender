@@ -1,3 +1,6 @@
+body {
+    background-color: yellow; /* Test style to verify CSS connection */
+}
 
 .prefInput{
     width:70%;

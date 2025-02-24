@@ -10,7 +10,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./db_data:/var/lib/mysql
+      - fashionrecommender_db_data:/var/lib/mysql
       - ./scripts/schema.sql:/docker-entrypoint-initdb.d/init.sql
 
   python-app:
@@ -37,3 +37,6 @@ services:
       GOOGLE_IMAGES_PROJ_CX: ${GOOGLE_IMAGES_PROJ_CX}
     volumes:
       - .:/app
+
+volumes:
+  fashionrecommender_db_data:

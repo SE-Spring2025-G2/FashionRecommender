@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 import os
 
@@ -33,6 +33,9 @@ def create_app(test_conifg=None):
     from . import preferences
     from . import recommendations
     from . import shopping
+    from . import logos
+    from . import feedback
+    from . import blogs
 
     app.register_blueprint(views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
@@ -40,6 +43,9 @@ def create_app(test_conifg=None):
     app.register_blueprint(preferences.preferencesbp)
     app.register_blueprint(recommendations.recommendationsbp)
     app.register_blueprint(shopping.shoppingbp)
+    app.register_blueprint(logos.logosbp)
+    app.register_blueprint(feedback.feedbackbp)
+    app.register_blueprint(blogs.blogsbp)
 
     from .models import User
 
@@ -50,5 +56,9 @@ def create_app(test_conifg=None):
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
+    
+    @app.context_processor
+    def inject_user():
+        return dict(user=current_user)
 
     return app

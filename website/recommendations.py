@@ -99,7 +99,7 @@ def get_recommendations():
         filters_text = "\n".join([f"- {key}: {value}" for key, value in filtered_filters.items()])
 
         city = req_data.get(contracts.RecommendationContractRequest.CITY_KEY, "autodetect")
-        if city == "autodetect":
+        if city == "autodetect" or city == "":
             city = utils.GeolocationAPI().getCurrentLocation()
 
         temperature_f, weather_condition = utils.WeatherAPI().getCurrentWeather(city=city)
@@ -201,7 +201,7 @@ You are a **fashion recommendation AI**. Based on the **selected filters** and a
         print(f"Server error: {str(e)}", flush=True)
         return jsonify({
             "error": "Internal server error",
-            "error_code": contracts.ErrorCodes.SERVER_ERROR
+            # "error_code": contracts.ErrorCodes.SERVER_ERROR
         }), 500
 
 @recommendationsbp.route("/style_match", methods=["POST"])

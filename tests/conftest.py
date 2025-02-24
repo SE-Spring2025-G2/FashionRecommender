@@ -37,12 +37,19 @@ def create_app():
     import website.preferences
     import website.recommendations
 
+    import website.logos
+    import website.feedback
+    import website.blogs
+
     # from . import recommendations
 
     app.register_blueprint(website.views.views, url_prefix="/")
     app.register_blueprint(website.auth.auth, url_prefix="/")
     app.register_blueprint(website.preferences.preferencesbp)
     app.register_blueprint(website.recommendations.recommendationsbp)
+    app.register_blueprint(website.logos.logosbp)
+    app.register_blueprint(website.feedback.feedbackbp)
+    app.register_blueprint(website.blogs.blogsbp)
     return app
 
 

@@ -1,0 +1,111 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='feedback.css') }}">
+<script src="{{ url_for('static', filename='js/feedback.js') }}"></script>
+{% extends "base.html" %}
+
+{% block title %}Feedback!{% endblock %}
+
+{% block content %}
+
+<div class="resultbg">
+    <div class="page-headerx">
+        <div class="container">
+            <div class="text">
+                <span style="--i:-4">V</span>
+                <span style="--i:-3">o</span>
+                <span style="--i:-4">g</span>
+                <span style="--i:-1">u</span>
+                <span style="--i:0">e</span>
+                <span style="--i:1">X</span>
+            </div>
+        </div>
+        <div class="container flow">
+            <div class="page-title">Tailor made, just for you.</div>
+            <p class="page-subtitle"></p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h3 class="title">Share Your Experience</h3>
+    <p class="catchy-text">We would love to hear your thoughts, suggestions, concerns or problems with anything so we can improve!</p>
+    <div class="row">
+        <!-- Past Feedbacks Section -->
+        <div class="col-md-6">
+            <div class="card h-100" style="max-height: 600px; overflow-y: auto;">
+                <div class="card-body">
+                    <h3 class="card-title">Past Feedbacks</h3>
+                    <div id="past-feedbacks" class="overflow-auto" style="max-height: 500px;">
+                        {% for feedback in feedbacks %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ feedback.name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Rating: {{ feedback.frate }}</h6>
+                                <p class="card-text">{{ feedback.comments }}</p>
+                                <p class="card-text"><small class="text-muted">{{ feedback.date }}</small></p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Give Feedback Section -->
+        <div class="col-md-6">
+            <div class="card h-100" style="max-height: 600px; overflow-y: auto;">
+                <div class="card-body">
+                    <h3 class="card-title">Give Feedback</h3>
+                    <form name="feedback_form" id="feedback_form" method="post">
+                        <div class="mb-3">
+                            <label>Feedback Type</label>
+                            <div class="d-flex flex-row py-1">
+                                <div class="form-check mr-3">
+                                    <input class="form-check-input" type="radio" name="ftype" id="Comments" value="Comments">
+                                    <label class="form-check-label" for="Comments">Comments</label>
+                                </div>
+                                <div class="form-check mx-3">
+                                    <input class="form-check-input" type="radio" name="ftype" id="Suggestions" value="Suggestions">
+                                    <label class="form-check-label" for="Suggestions">Suggestions</label>
+                                </div>
+                                <div class="form-check mx-3">
+                                    <input class="form-check-input" type="radio" name="ftype" id="Questions" value="Questions">
+                                    <label class="form-check-label" for="Questions">Questions</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="feedback_comments">Describe your feedback:</label>
+                            <textarea class="form-control" required rows="6" name="comments" id="feedback_comments"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label>How do you rate your overall experience?</label>
+                            <div class="d-flex flex-row py-1">
+                                <div class="form-check mr-3">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating_bad" value="bad">
+                                    <label class="form-check-label" for="rating_bad">Bad</label>
+                                </div>
+                                <div class="form-check mx-3">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating_good" value="good">
+                                    <label class="form-check-label" for="rating_good">Good</label>
+                                </div>
+                                <div class="form-check mx-3">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating_excellent" value="excellent">
+                                    <label class="form-check-label" for="rating_excellent">Excellent</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="feedback_name">Your Name:</label>
+                            <input type="text" name="name" class="form-control" id="feedback_name"/>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" name="anon" id="anon">
+                            <label class="form-check-label" for="anon">Prefer to be anonymous</label>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-lg">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
