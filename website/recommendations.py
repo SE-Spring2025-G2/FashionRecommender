@@ -99,7 +99,7 @@ def get_recommendations():
         filters_text = "\n".join([f"- {key}: {value}" for key, value in filtered_filters.items()])
 
         city = req_data.get(contracts.RecommendationContractRequest.CITY_KEY, "autodetect")
-        if city == "autodetect":
+        if city == "autodetect" or city == "":
             city = utils.GeolocationAPI().getCurrentLocation()
 
         temperature_f, weather_condition = utils.WeatherAPI().getCurrentWeather(city=city)
