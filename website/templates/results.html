@@ -7,6 +7,11 @@
     crossorigin="anonymous"></script>
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
+
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous"
+    src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v22.0"></script>
+
 <div class="resultbg">
     <div class="page-headerx">
         <div class="container">
@@ -45,8 +50,8 @@
         // Show the query
         let query = JSON.parse(window.sessionStorage.getItem('query'));
         const queryKeys = ["culture", "occasion", "gender", "ageGroup", "seasonalTrends",
-        "personalStyle", "bodyType", "fitType", "fabricPreference",
-        "colorPreference", "clothingType", "activityType", "lowerBudget"];
+            "personalStyle", "bodyType", "fitType", "fabricPreference",
+            "colorPreference", "clothingType", "activityType", "lowerBudget"];
         queryKeys.forEach(key => {
             if (query[key]) {
                 if (key === "lowerBudget") {
@@ -61,8 +66,10 @@
 </div>
 
 <div style="margin-top: 50px; width: 100%; text-align: center; font-size: 20px; font-weight: 500;">Color Palettes</div>
-<div style="width: 100%; text-align: center; font-size: 18px; font-weight: 300;">Some suggestions on what colors to wear</div>
-<div style="margin-top: 30px; margin-bottom: 60px; display: flex; justify-content: center; row-gap: 20px;" class="palettes">
+<div style="width: 100%; text-align: center; font-size: 18px; font-weight: 300;">Some suggestions on what colors to wear
+</div>
+<div style="margin-top: 30px; margin-bottom: 60px; display: flex; justify-content: center; row-gap: 20px;"
+    class="palettes">
 </div>
 
 <div class="" style="display: grid; grid-template-columns: 50% 50%; gap: 10px; padding-bottom: 100px;">
@@ -76,6 +83,66 @@
                 href="/shopping-results?{{link}}"><b>Shop</b></a>
             <button id="favourite{{idx}}" type="button"
                 class="blendbtn btn btn-primary favourite rounded m-3"><b>Favourite</b></button>
+
+            <!-- <div class="fb-share-button" data-href={{link}} data-layout=""
+                data-size="">
+                <a target="_blank"
+                    href="https://www.facebook.com/sharer/sharer.php?u={{ link }}&amp;src=sdkpreparse"
+                    class="fb-xfbml-parse-ignore">Share</a>
+            </div> -->
+
+            <!-- create a button, that will give me a small dropdown list -->
+            <div class="dropdown">
+                <button class="btn btn-primary buttonA rounded m-3" type="button" id="shop-link{{idx}}"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Share
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                    <div class="dropdown-item">
+                        <a class="dropdown-item"
+                            href="https://www.facebook.com/sharer/sharer.php?u={{ link }}&t=CNN%26s+website;src=sdkpreparse"
+                            target="_blank">
+
+                            <img src="https://upload.wikimedia.org/wikipedia/en/0/04/Facebook_f_logo_%282021%29.svg"
+                                alt="Twitter Logo" style="width: 20px; height: 20px; margin-right: 5px;">
+
+
+                            Facebook</a>
+                    </div>
+
+
+                    <div class="dropdown-divider"></div>
+
+
+                    <div class="dropdown-item" aria-labelledby="dropdownMenuButton">
+
+                        <a class="dropdown-item"
+                            href="https://twitter.com/intent/tweet?text=Check%20this%20out!&url={{ link }}"
+                            target="_blank">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg"
+                                alt="Twitter Logo" style="width: 20px; height: 20px; margin-right: 5px;">
+                            Twitter
+                        </a>
+                    </div>
+
+                    <div class="dropdown-divider"></div>
+
+                    <div class="dropdown-item" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="https://t.me/share/url?url={{ link }}&text=Check%20this%20out!"
+                            target="_blank">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg"
+                                alt="Telegram Logo"
+                                style="width: 20px; height: 20px; margin-right: 10px; vertical-align: middle;">
+                            Telegram
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- <button id="favourite{{idx}}" type="button"
+                class="blendbtn btn btn-primary favourite rounded m-3"><b>Favourite</b></button> -->
         </div>
     </div>
     <div id="my-modal{{idx}}" class="modal fade" aria-labelledby="my-modalLabel" aria-hidden="true" tabindex="-1"
@@ -95,4 +162,46 @@
     </div>
     {% endfor %}
 </div>
+
+<script>
+    function openFacebookPopup(link) {
+        // Get current screen width and height
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        // Calculate the center position
+        const popupWidth = 600;
+        const popupHeight = 500;
+        const left = (screenWidth - popupWidth) / 2 + window.scrollX;
+        const top = (screenHeight - popupHeight) / 2 + window.scrollY;
+
+        // Open the popup
+        const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}&src=sdkpreparse`;
+        window.open(url, 'fbShareWindow', `height=${popupHeight},width=${popupWidth},top=${top},left=${left},toolbar=no,menubar=no,resizable=yes,scrollbars=yes`);
+
+        return false; // Prevent default link behavior
+    }
+</script>
+
+<!-- <script>
+    function openFacebookPopup(link) {
+        // Get current scroll position
+        const scrollX = window.screenX || window.screenLeft;
+        const scrollY = window.screenY || window.screenTop;
+
+        console.log(window.scrollX, window.scrollY);
+        
+        // Set popup dimensions
+        const popupWidth = 600;
+        const popupHeight = 500;
+
+        // Open the popup at the current scroll position
+        const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}&src=sdkpreparse`;
+        window.open(url, 'fbShareWindow', `height=${popupHeight},width=${popupWidth},top=${scrollY + 100},left=${scrollX + 100},toolbar=no,menubar=no,resizable=yes,scrollbars=yes`);
+        
+        return false; // Prevent default link behavior
+    }
+</script> -->
+
+
 {% endblock %}
