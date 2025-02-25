@@ -40,6 +40,7 @@ def create_app():
     import website.logos
     import website.feedback
     import website.blogs
+    import website.searchhistory
 
     # from . import recommendations
 
@@ -50,6 +51,7 @@ def create_app():
     app.register_blueprint(website.logos.logosbp)
     app.register_blueprint(website.feedback.feedbackbp)
     app.register_blueprint(website.blogs.blogsbp)
+    app.register_blueprint(website.searchhistory.searchhistorybp)
     return app
 
 
