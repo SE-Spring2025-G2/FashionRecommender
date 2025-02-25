@@ -36,3 +36,10 @@ class Feedback(db.Model, UserMixin, SerializerMixin):
     name = db.Column(db.String(150), nullable=False)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     userid = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class Searchhistory(db.Model, UserMixin, SerializerMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    search_terms = db.Column(db.String(500), nullable=False)
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    userid = db.Column(db.Integer, db.ForeignKey('user.id'))
+    search_links = db.Column(db.JSON, nullable=False)
