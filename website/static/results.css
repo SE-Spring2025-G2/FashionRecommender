@@ -221,3 +221,21 @@ body.modal-open .media-element {
   font-weight: bold;
   line-height: 25px;
 }
+
+
+
+
+.title {
+  text-align: right;
+  margin: 20px 150px;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.catchy-text {
+  text-align: center;
+  margin: 10px 300px ;
+  /* Add more space below the catchy text */
+  font-size: 1.2em;
+  color: #555;
+}

@@ -51,6 +51,16 @@ create table feedback (
     FOREIGN KEY (userid) REFERENCES user(id)
 );
 
+-- create the search history table
+create table searchhistory (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userid INT NOT NULL,
+    search_terms VARCHAR(500) NOT NULL,
+    search_links json not null,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    FOREIGN KEY (userid) REFERENCES user(id)
+);
+
 drop database if exists fashion_test;
 create database fashion_test;
 use fashion_test;

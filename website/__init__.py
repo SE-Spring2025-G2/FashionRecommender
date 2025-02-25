@@ -36,6 +36,7 @@ def create_app(test_conifg=None):
     from . import logos
     from . import feedback
     from . import blogs
+    from . import searchhistory
 
     app.register_blueprint(views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
@@ -46,6 +47,7 @@ def create_app(test_conifg=None):
     app.register_blueprint(logos.logosbp)
     app.register_blueprint(feedback.feedbackbp)
     app.register_blueprint(blogs.blogsbp)
+    app.register_blueprint(searchhistory.searchhistorybp)
 
     from .models import User
 
