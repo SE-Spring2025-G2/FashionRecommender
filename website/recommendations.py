@@ -167,6 +167,10 @@ You are a **fashion recommendation AI**. Based on the **uploaded image** (which 
 
             links = help.giveRecommendationsBasedOnGemini(response.query)
 
+            new_search_history = Searchhistory(search_terms = filters_text, search_links = links, userid = current_user.id)
+            db.session.add(new_search_history)
+            db.session.commit()
+
             return jsonify({
                 contracts.RecommendationContractResponse.LINKS: links,
                 "COLOR_PALETTES": response.color_palette
