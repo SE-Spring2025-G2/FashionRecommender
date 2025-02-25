@@ -23,7 +23,8 @@ from werkzeug.utils import secure_filename
 from pathlib import Path
 from . import helper, utils
 from pydantic import BaseModel, TypeAdapter
-
+from .models import Searchhistory
+from . import db
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     from projectsecrets.gemini_secret import GEMINI_API_KEY
@@ -97,6 +98,19 @@ def get_recommendations():
 
         filtered_filters = {key: value for key, value in user_filters.items() if value}
         filters_text = "\n".join([f"- {key}: {value}" for key, value in filtered_filters.items()])
+
+        # print("here",filters_text)
+
+        # # create a string with the values of the filtered_text
+        # s = ''
+        # for key, value in filtered_filters.items():
+        #     s += f"{key}: {value},"
+        # s = s.rstrip(',')
+        # print(s)
+        print("here",filters_text)
+
+        # #jsonify the filtered_filters
+
 
         city = req_data.get(contracts.RecommendationContractRequest.CITY_KEY, "autodetect")
         if city == "autodetect" or city == "":
@@ -179,7 +193,7 @@ You are a **fashion recommendation AI**. Based on the **selected filters** and a
 - The **color palette should be a recommendation**, suggesting colors that best suit the user's selected filters and context.
 """
             
-            print(f"Prompt: {prompt}", flush=True)
+            print(f"Promptuu: {prompt}", flush=True)
 
             result = client.models.generate_content(
                 contents=prompt,
@@ -192,6 +206,12 @@ You are a **fashion recommendation AI**. Based on the **selected filters** and a
             response: GeminiQueryResponse = result.parsed
 
             links = help.giveRecommendationsBasedOnGemini(response.query)
+            print("length:", len(links))
+
+            new_search_history = Searchhistory(search_terms = filters_text, search_links = links, userid = current_user.id)
+            db.session.add(new_search_history)
+            db.session.commit()
+
             return jsonify({
                 contracts.RecommendationContractResponse.LINKS: links,
                 "COLOR_PALETTES": response.color_palette
